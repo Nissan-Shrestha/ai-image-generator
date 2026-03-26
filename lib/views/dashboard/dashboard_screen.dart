@@ -1,5 +1,6 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
 import 'package:ai_image_generator_app/core/constants/textstyle.dart';
+import 'package:ai_image_generator_app/views/generation/image_generation_screen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text("Welcome :)", style: headingStyle),
+        title: Text("Welcome :)", style: subheadingStyle),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -30,7 +31,14 @@ class DashboardScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ImageGenerationScreen(),
+                        ),
+                      );
+                    },
                     child: Text("Generate an image", style: buttonTextStyle),
                   ),
                   Expanded(
@@ -66,7 +74,7 @@ class DashboardScreen extends StatelessWidget {
                           "https://img.freepik.com/free-photo/closeup-scarlet-macaw-from-side-view-scarlet-macaw-closeup-head_488145-3540.jpg?semt=ais_hybrid&w=740&q=80",
                         ),
                       ),
-                      color: primaryColor,
+                      color: Colors.transparent,
                     ),
                   );
                 },
