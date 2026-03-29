@@ -1,39 +1,20 @@
 import 'package:flutter/material.dart';
 
 class ImageGenerationViewmodel extends ChangeNotifier {
-  final TextEditingController generateController = TextEditingController();
-
   bool isLoading = false;
 
-  // final List<String> history = [];
-
-  //currently just clears textformfield
-  Future<void> enterPrompt() async {
+  Future<void> generateImage(String prompt) async {
     if (isLoading) return;
-
-    final prompt = generateController.text.trim();
-    if (prompt.isEmpty) return;
+    if (prompt.trim().isEmpty) return;
 
     isLoading = true;
     notifyListeners();
 
-    print("the prompt was:$prompt");
-    // history.insert(0, prompt);
+    print("Generating image for prompt: $prompt");
 
-    // if (history.length > 5) {
-    //   history.removeAt(4);
-    // }
-    print(prompt);
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2)); // simulate API
 
     isLoading = false;
-    generateController.clear();
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    generateController.dispose();
-    super.dispose();
   }
 }
