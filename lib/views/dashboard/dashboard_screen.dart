@@ -39,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text("Generate an image", style: buttonTextStyle),
+                    child: Text("Generate image", style: buttonTextStyle),
                   ),
                   Expanded(
                     child: ElevatedButton(
@@ -47,7 +47,7 @@ class DashboardScreen extends StatelessWidget {
                         backgroundColor: secondaryColor,
                       ),
                       onPressed: () {},
-                      child: Text("Edit an image", style: buttonTextStyle),
+                      child: Text("Edit Image", style: buttonTextStyle),
                     ),
                   ),
                 ],

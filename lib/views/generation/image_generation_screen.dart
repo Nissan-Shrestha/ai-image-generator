@@ -1,3 +1,4 @@
+import 'package:ai_image_generator_app/core/constants/colors.dart';
 import 'package:ai_image_generator_app/core/constants/textstyle.dart';
 import 'package:ai_image_generator_app/viewmodels/Image_generation_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,6 @@ class ImageGenerationScreen extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20),
               Consumer<ImageGenerationViewmodel>(
@@ -31,8 +31,8 @@ class ImageGenerationScreen extends StatelessWidget {
                       hintText: "Enter ur prompt",
                       suffixIcon: vm.isLoading
                           ? Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(strokeWidth: 3),
                             )
                           : IconButton(
                               onPressed: vm.enterPrompt,
@@ -43,12 +43,17 @@ class ImageGenerationScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
                     ),
                   );
                 },
               ),
               SizedBox(height: 20),
-              //i was just messing around 
+
+              //i was just messing around
               // Text("Previous Prompts", style: bodyStyle),
               // Consumer<ImageGenerationViewmodel>(
               //   builder: (context, vm, _) {
@@ -69,6 +74,7 @@ class ImageGenerationScreen extends StatelessWidget {
               //     }
               //   },
               // ),
+              Text("No image yet"),
             ],
           ),
         ),

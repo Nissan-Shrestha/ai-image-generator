@@ -23,7 +23,7 @@ class ImageGenerationViewmodel extends ChangeNotifier {
     // if (history.length > 5) {
     //   history.removeAt(4);
     // }
-
+    print(prompt);
     await Future.delayed(const Duration(seconds: 2));
 
     isLoading = false;

@@ -19,7 +19,11 @@ class OnboardingScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Welcome to AI Image Generator", style: headingStyle),
+              Text(
+                "Welcome to AI Image Generator",
+                textAlign: TextAlign.center,
+                style: headingStyle,
+              ),
               SizedBox(height: 5),
               Text("Generate or edit your first image", style: bodyStyle),
               SizedBox(height: 5),
