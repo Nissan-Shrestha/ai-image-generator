@@ -1,9 +1,12 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ai_image_generator_app/viewmodels/Image_generation_viewmodel.dart';
 import 'package:ai_image_generator_app/views/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 

@@ -1,8 +1,8 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
-import 'package:ai_image_generator_app/core/constants/textstyle.dart';
 import 'package:ai_image_generator_app/viewmodels/Image_generation_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class ImageGenerationScreen extends StatefulWidget {
   const ImageGenerationScreen({super.key});
@@ -23,106 +23,280 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Generate Image", style: subheadingStyle),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      resizeToAvoidBottomInset: true,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [backgroundColor, surfaceColor],
+          ),
+        ),
         child: Column(
           children: [
-            SizedBox(height: 20),
-            Consumer<ImageGenerationViewmodel>(
-              builder: (context, vm, _) {
-                return TextFormField(
-                  enabled: !vm.isLoading,
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: "Enter ur prompt",
-                    suffixIcon: vm.isLoading
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(strokeWidth: 3),
-                          )
-                        : IconButton(
-                            onPressed: () {
-                              final prompt = _controller.text;
-                              vm.generateImage(prompt);
-                              _controller.clear();
-                            },
-                            icon: Icon(Icons.arrow_forward),
-                          ),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20),
-
-            //i was just messing around
-            // Text("Previous Prompts", style: bodyStyle),
-            // Consumer<ImageGenerationViewmodel>(
-            //   builder: (context, vm, _) {
-            //     if (vm.history.isEmpty) {
-            //       return Text("No history");
-            //     } else {
-            //       return ListView.builder(
-            //         shrinkWrap: true,
-            //         itemCount: vm.history.length,
-            //         itemBuilder: (BuildContext context, int index) {
-            //           final prompt = vm.history[index];
-            //           return ListTile(
-            //             leading: Icon(Icons.history),
-            //             title: Text(prompt),
-            //           );
-            //         },
-            //       );
-            //     }
-            //   },
-            // ),
-            Consumer<ImageGenerationViewmodel>(
-              builder: (context, vm, _) {
-                return Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-
-                  child: () {
-                    if (vm.isLoading) {
-                      return Center(
-                        child: CircularProgressIndicator(strokeWidth: 3),
-                      );
-                    }
-                    if (vm.generatedImageUrl == null) {
-                      return Text(
-                        "Your generated image will appear here",
-                        style: bodyStyle,
-                        textAlign: TextAlign.center,
-                      );
-                    }
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        vm.generatedImageUrl!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: surfaceColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: accentColor, width: 2),
                       ),
-                    );
-                  }(),
-                );
-              },
+                      child: Icon(Icons.arrow_back, color: accentColor),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Create Image",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
+                      Text(
+                        "Describe what you want to see",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    // Input Field
+                    Consumer<ImageGenerationViewmodel>(
+                      builder: (context, vm, _) {
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: surfaceColor,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: vm.errorMessage != null
+                                      ? Colors.red.withOpacity(0.5)
+                                      : accentColor.withOpacity(0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: TextField(
+                                enabled: !vm.isLoading,
+                                controller: _controller,
+                                maxLines: 4,
+                                style: TextStyle(color: textColor),
+                                decoration: InputDecoration(
+                                  hintText:
+                                      "A beautiful sunset over mountains...",
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade600,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(16),
+                                  suffixIcon: vm.isLoading
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                    accentColor,
+                                                  ),
+                                            ),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              final prompt = _controller.text;
+                                              vm.generateImage(prompt);
+                                              _controller.clear();
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    primaryColor,
+                                                    secondaryColor,
+                                                  ],
+                                                ),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.send,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            // Error Message
+                            if (vm.errorMessage != null &&
+                                vm.errorMessage!.isNotEmpty)
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade900.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.red.withOpacity(0.5),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        vm.errorMessage!,
+                                        style: TextStyle(
+                                          color: Colors.red.shade200,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    // Image Display
+                    Consumer<ImageGenerationViewmodel>(
+                      builder: (context, vm, _) {
+                        return Container(
+                          height: 300,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                surfaceColor,
+                                surfaceColor.withOpacity(0.5),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: accentColor.withOpacity(0.2),
+                            ),
+                          ),
+                          child: () {
+                            if (vm.isLoading) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              accentColor,
+                                            ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Text(
+                                      "Creating your image...",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade400,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "(This may take 30-60 seconds)",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            if (vm.generatedImageUrl == null) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.image,
+                                      color: Colors.grey.shade600,
+                                      size: 50,
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      "Your image will appear here",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade400,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: vm.generatedImageUrl!.startsWith('data:')
+                                  ? Image.memory(
+                                      base64Decode(
+                                        vm.generatedImageUrl!.replaceFirst(
+                                          'data:image/png;base64,',
+                                          '',
+                                        ),
+                                      ),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    )
+                                  : Image.network(
+                                      vm.generatedImageUrl!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                            );
+                          }(),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 30),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
