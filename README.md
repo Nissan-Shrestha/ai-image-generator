@@ -11,9 +11,6 @@ A premium, state-of-the-art Flutter application that harnesses the power of **Cl
 - **Prompt-to-Image**: Generate high-quality images from simple text descriptions.
 - **Reference Image support**: (Planned/Experimental) Support for image-to-image generation.
 - **Modern UI/UX**: 
-  - Sleek dark mode design.
-  - Vibrant gradients and glassmorphism.
-  - Smooth micro-animations and physics-based scrolling.
 - **Fast Performance**: Optimized image loading and processing.
 - **Environment Security**: Sensitive API keys are managed through `.env` files.
 - **Robust Error Handling**: Real-time feedback for network issues or API limits.
