@@ -1,5 +1,4 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
-import 'package:ai_image_generator_app/core/constants/textstyle.dart';
 import 'package:ai_image_generator_app/views/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ai_image_generator_app/viewmodels/Image_generation_viewmodel.dart';
+import 'package:ai_image_generator_app/viewmodels/image_generation_viewmodel.dart';
 import 'package:ai_image_generator_app/views/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           //
           // This works for code too, not just values: Most code changes can be
           // tested with just a hot reload.
-          colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         home: OnboardingScreen(),
         debugShowCheckedModeBanner: false,

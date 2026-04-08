@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    layout.buildDirectory.set(file("../../build/app"))
     namespace = "com.example.ai_image_generator_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

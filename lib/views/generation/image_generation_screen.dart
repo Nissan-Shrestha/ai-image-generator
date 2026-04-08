@@ -1,5 +1,5 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
-import 'package:ai_image_generator_app/viewmodels/Image_generation_viewmodel.dart';
+import 'package:ai_image_generator_app/viewmodels/image_generation_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -88,14 +88,69 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                       builder: (context, vm, _) {
                         return Column(
                           children: [
+                            if (vm.selectedImage != null)
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: accentColor.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: accentColor.withValues(alpha: 0.5),
+                                          ),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child: Image.file(
+                                            vm.selectedImage!,
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      // Clear Button
+                                      GestureDetector(
+                                        onTap: () {
+                                          vm.clearSelectedImage();
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.all(2),
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                             Container(
                               decoration: BoxDecoration(
                                 color: surfaceColor,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: vm.errorMessage != null
-                                      ? Colors.red.withOpacity(0.5)
-                                      : accentColor.withOpacity(0.3),
+                                      ? Colors.red.withValues(alpha: 0.5)
+                                      : accentColor.withValues(alpha: 0.3),
                                   width: 2,
                                 ),
                               ),
@@ -105,6 +160,17 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                                 maxLines: 4,
                                 style: TextStyle(color: textColor),
                                 decoration: InputDecoration(
+                                  prefixIcon: IconButton(
+                                    onPressed: vm.pickImage,
+                                    icon: Icon(
+                                      vm.selectedImage != null
+                                          ? Icons.image
+                                          : Icons.add_a_photo,
+                                      color: vm.selectedImage != null
+                                          ? Colors.green
+                                          : Colors.grey,
+                                    ),
+                                  ),
                                   hintText:
                                       "A beautiful sunset over mountains...",
                                   hintStyle: TextStyle(
@@ -130,10 +196,13 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                                       : Padding(
                                           padding: const EdgeInsets.all(8),
                                           child: GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
                                               final prompt = _controller.text;
-                                              vm.generateImage(prompt);
-                                              _controller.clear();
+                                              final success =
+                                                  await vm.generateImage(prompt);
+                                              if (success) {
+                                                _controller.clear();
+                                              }
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -162,10 +231,10 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                               Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.shade900.withOpacity(0.3),
+                                  color: Colors.red.shade900.withValues(alpha: 0.3),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: Colors.red.withOpacity(0.5),
+                                    color: Colors.red.withValues(alpha: 0.5),
                                   ),
                                 ),
                                 child: Row(
@@ -203,12 +272,12 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                             gradient: LinearGradient(
                               colors: [
                                 surfaceColor,
-                                surfaceColor.withOpacity(0.5),
+                                surfaceColor.withValues(alpha: 0.5),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: accentColor.withOpacity(0.2),
+                              color: accentColor.withValues(alpha: 0.2),
                             ),
                           ),
                           child: () {

@@ -1,18 +1,31 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class CloudflareAIService {
   final String _accountId = dotenv.env['CLOUDFLARE_ACCOUNT_ID'] ?? '';
   final String _apiToken = dotenv.env['CLOUDFLARE_API_TOKEN'] ?? '';
 
-  Future<String?> generateImage({required String prompt}) async {
+  Future<String?> generateImage({
+    required String prompt,
+    File? imageFile,
+  }) async {
     final url = Uri.parse(
       'https://api.cloudflare.com/client/v4/accounts/$_accountId/ai/run/@cf/black-forest-labs/flux-2-dev',
     );
 
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer $_apiToken';
+
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('input_image_0', imageFile.path),
+      );
+    }
+
     request.fields['prompt'] = prompt;
     request.fields['steps'] = '15';
     request.fields['width'] = '768';
@@ -28,10 +41,10 @@ class CloudflareAIService {
 
       final response = await http.Response.fromStream(streamedResponse);
 
-      print('=== Cloudflare Response ===');
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
-      print('===========================');
+      debugPrint('=== Cloudflare Response ===');
+      debugPrint('Status: ${response.statusCode}');
+      debugPrint('Body: ${response.body}');
+      debugPrint('===========================');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
