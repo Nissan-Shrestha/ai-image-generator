@@ -1,4 +1,4 @@
-# AI Image Generator 🎨
+# AI Image Generator
 
 A premium, state-of-the-art Flutter application that harnesses the power of **Cloudflare AI** to transform text prompts into stunning visual art. Designed with a modern, glassmorphic aesthetic and high-performance state management.
 
@@ -6,7 +6,7 @@ A premium, state-of-the-art Flutter application that harnesses the power of **Cl
 ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
 
-## ✨ Features
+## Features
 
 - **Prompt-to-Image**: Generate high-quality images from simple text descriptions.
 - **Reference Image support**: (Planned/Experimental) Support for image-to-image generation.
@@ -18,7 +18,7 @@ A premium, state-of-the-art Flutter application that harnesses the power of **Cl
 - **Environment Security**: Sensitive API keys are managed through `.env` files.
 - **Robust Error Handling**: Real-time feedback for network issues or API limits.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework**: [Flutter](https://flutter.dev) (Channel Stable)
 - **Language**: [Dart](https://dart.dev)
@@ -27,7 +27,7 @@ A premium, state-of-the-art Flutter application that harnesses the power of **Cl
 - **Styling**: Vanilla Flutter with Custom Gradients & `google_fonts`
 - **Other libraries**: `http`, `flutter_dotenv`, `image_picker`.
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 - Flutter SDK installed on your machine.
@@ -59,7 +59,7 @@ A premium, state-of-the-art Flutter application that harnesses the power of **Cl
    flutter run
    ```
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 lib/
@@ -73,7 +73,7 @@ lib/
     └── generation/   # Image generation interface
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! If you have any ideas to improve the UI or integrate more AI models, feel free to open a Pull Request.
 
@@ -83,9 +83,9 @@ Contributions are welcome! If you have any ideas to improve the UI or integrate 
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-*Built with ❤️ by Nissan Shrestha*
+*Built with love by Nissan Shrestha*
