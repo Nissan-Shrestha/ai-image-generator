@@ -1,5 +1,6 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
 import 'package:ai_image_generator_app/viewmodels/auth_viewmodel.dart';
+import 'package:ai_image_generator_app/views/creations/creations_screen.dart';
 import 'package:ai_image_generator_app/views/generation/image_generation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -166,7 +167,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label: 'My Creations',
             onTap: () {
               Navigator.pop(context);
-              // TODO: Navigate to creations screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CreationsScreen()),
+              );
             },
           ),
           _buildDrawerTile(
