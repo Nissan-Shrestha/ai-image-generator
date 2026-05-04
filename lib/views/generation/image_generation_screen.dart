@@ -14,6 +14,24 @@ class ImageGenerationScreen extends StatefulWidget {
 class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
   final TextEditingController _controller = TextEditingController();
 
+  final List<String> _styles = [
+    "Cyberpunk",
+    "Cinematic",
+    "Anime",
+    "Oil Painting",
+    "3D Render",
+    "Watercolor",
+    "Photorealistic"
+  ];
+
+  final List<String> _surprisePrompts = [
+    "A futuristic city with flying cars at sunset, cyberpunk style",
+    "A cute golden retriever astronaut floating in space",
+    "A majestic waterfall inside a glowing bioluminescent cave",
+    "A tiny magical village hidden inside a hollow tree",
+    "A steampunk airship soaring through fluffy white clouds",
+  ];
+
   @override
   void dispose() {
     _controller.dispose();
@@ -222,6 +240,60 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                                           ),
                                         ),
                                 ),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            // Style Chips
+                            SizedBox(
+                              height: 40,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _surprisePrompts.shuffle();
+                                      _controller.text = _surprisePrompts.first;
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 8),
+                                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(colors: [primaryColor, secondaryColor]),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.auto_awesome, color: Colors.white, size: 16),
+                                          SizedBox(width: 6),
+                                          Text("Surprise Me", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  ..._styles.map((style) => GestureDetector(
+                                    onTap: () {
+                                      final currentText = _controller.text;
+                                      if (currentText.isEmpty) {
+                                        _controller.text = style;
+                                      } else {
+                                        _controller.text = "$currentText, $style style";
+                                      }
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 8),
+                                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: surfaceColor,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(style, style: TextStyle(color: textColor, fontSize: 13)),
+                                    ),
+                                  )),
+                                ],
                               ),
                             ),
                             SizedBox(height: 16),
