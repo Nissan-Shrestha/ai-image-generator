@@ -62,9 +62,18 @@ class CloudflareAIService {
       } else if (response.statusCode == 401) {
         throw Exception('Invalid API credentials. Check .env file.');
       } else if (response.statusCode == 429) {
-        throw Exception('Rate limited. Wait a moment and try again.');
+        throw Exception('You are generating images too fast! Please wait a moment.');
+      } else if (response.statusCode >= 500) {
+        throw Exception('The AI server is currently busy or experiencing issues. Please try again in a moment.');
       } else {
-        throw Exception('HTTP ${response.statusCode}: ${response.body}');
+        String errorMsg = 'An unexpected error occurred. Please try again.';
+        try {
+          final data = jsonDecode(response.body);
+          if (data['errors'] != null && data['errors'].isNotEmpty) {
+            errorMsg = data['errors'][0]['message'] ?? errorMsg;
+          }
+        } catch (_) {}
+        throw Exception(errorMsg);
       }
     } catch (e) {
       if (e.toString().contains('SocketException')) {

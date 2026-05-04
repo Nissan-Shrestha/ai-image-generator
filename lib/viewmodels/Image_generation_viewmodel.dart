@@ -44,7 +44,11 @@ class ImageGenerationViewmodel extends ChangeNotifier {
       selectedImage = null;
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      String errorStr = e.toString();
+      if (errorStr.startsWith('Exception: ')) {
+        errorStr = errorStr.replaceFirst('Exception: ', '');
+      }
+      errorMessage = errorStr;
       return false;
     } finally {
       isLoading = false;
