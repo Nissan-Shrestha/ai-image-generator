@@ -8,11 +8,14 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:gal/gal.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ImageGenerationViewmodel extends ChangeNotifier {
   bool _isPickerActive = false;
   bool isLoading = false;
   bool isSaving = false;
+  bool isSharing = false;
   bool saveSuccess = false;
   String? generatedImageUrl;
   String? errorMessage;
@@ -130,6 +133,42 @@ class ImageGenerationViewmodel extends ChangeNotifier {
       errorMessage = "Error saving image: $e";
     } finally {
       isSaving = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> shareImage() async {
+    if (generatedImageUrl == null || isSharing) return;
+
+    isSharing = true;
+    notifyListeners();
+
+    try {
+      Uint8List imageBytes;
+
+      if (generatedImageUrl!.startsWith('data:')) {
+        final base64Str = generatedImageUrl!.replaceFirst(
+          RegExp(r'data:image/[^;]+;base64,'),
+          '',
+        );
+        imageBytes = base64Decode(base64Str);
+      } else {
+        final response = await http.get(Uri.parse(generatedImageUrl!));
+        imageBytes = response.bodyBytes;
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/shared_ai_image.png');
+      await file.writeAsBytes(imageBytes);
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'Check out this image I generated with AI!',
+      );
+    } catch (e) {
+      errorMessage = "Error sharing image: $e";
+    } finally {
+      isSharing = false;
       notifyListeners();
     }
   }

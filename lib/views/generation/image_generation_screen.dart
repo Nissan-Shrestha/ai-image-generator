@@ -462,11 +462,25 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 8),
+                                ElevatedButton.icon(
+                                  onPressed: vm.isSharing ? null : () => vm.shareImage(),
+                                  icon: vm.isSharing 
+                                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                    : const Icon(Icons.share, color: Colors.white),
+                                  label: Text(vm.isSharing ? "Sharing..." : "Share"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: secondaryColor,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
                                 OutlinedButton.icon(
                                   onPressed: () => vm.clearGeneratedImage(),
                                   icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
