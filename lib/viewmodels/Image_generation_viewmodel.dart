@@ -161,9 +161,11 @@ class ImageGenerationViewmodel extends ChangeNotifier {
       final file = File('${tempDir.path}/shared_ai_image.png');
       await file.writeAsBytes(imageBytes);
 
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'Check out this image I generated with AI!',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Check out this image I generated with AI!',
+        ),
       );
     } catch (e) {
       errorMessage = "Error sharing image: $e";

@@ -1,6 +1,7 @@
 import 'package:ai_image_generator_app/core/constants/colors.dart';
-import 'package:ai_image_generator_app/views/dashboard/dashboard_screen.dart';
+import 'package:ai_image_generator_app/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
+
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -86,7 +87,7 @@ class OnboardingScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (_) => DashboardScreen()),
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
                         );
                       },
                       child: Text(

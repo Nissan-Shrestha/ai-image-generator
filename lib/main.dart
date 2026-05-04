@@ -1,19 +1,26 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ai_image_generator_app/viewmodels/image_generation_viewmodel.dart';
-import 'package:ai_image_generator_app/views/onboarding/onboarding_screen.dart';
+import 'package:ai_image_generator_app/viewmodels/auth_viewmodel.dart';
+import 'package:ai_image_generator_app/views/auth/login_screen.dart';
+import 'package:ai_image_generator_app/views/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -21,30 +28,46 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ImageGenerationViewmodel>(
           create: (_) => ImageGenerationViewmodel(),
         ),
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (_) => AuthViewModel(),
+        ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'AI Image Generator',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: OnboardingScreen(),
+        home: const AuthWrapper(),
         debugShowCheckedModeBanner: false,
       ),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // If connecting to Firebase, show loading
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            backgroundColor: Color(0xFF1A1A2E),
+            body: Center(child: CircularProgressIndicator(color: Colors.purpleAccent)),
+          );
+        }
+        
+        // If user is logged in, show the Dashboard
+        if (snapshot.hasData) {
+          return const DashboardScreen();
+        }
+        
+        // If not logged in, show the Login screen
+        return const LoginScreen();
+      },
     );
   }
 }
