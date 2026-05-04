@@ -434,6 +434,55 @@ class _ImageGenerationScreenState extends State<ImageGenerationScreen> {
                         );
                       },
                     ),
+                    SizedBox(height: 16),
+                    Consumer<ImageGenerationViewmodel>(
+                      builder: (context, vm, _) {
+                        if (vm.generatedImageUrl == null || vm.isLoading) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          children: [
+                            if (vm.saveSuccess)
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 12),
+                                child: Text(
+                                  "Image saved to gallery!",
+                                  style: TextStyle(color: Colors.greenAccent, fontSize: 14, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: vm.isSaving ? null : () => vm.saveImageToGallery(),
+                                  icon: vm.isSaving 
+                                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                    : const Icon(Icons.download, color: Colors.white),
+                                  label: Text(vm.isSaving ? "Saving..." : "Save"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                OutlinedButton.icon(
+                                  onPressed: () => vm.clearGeneratedImage(),
+                                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                                  label: const Text("Clear", style: TextStyle(color: Colors.redAccent)),
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.5)),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                     SizedBox(height: 30),
                   ],
                 ),
